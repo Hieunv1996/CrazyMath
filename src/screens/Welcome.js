@@ -43,7 +43,9 @@ export default class Welcome extends Component {
             </Text>
           </View>
         </View>
-
+        <View style= {styles.panelText}>
+          <Text style = {styles.gameName}>CRAZY MATH</Text>
+        </View>
         <View style = {styles.panelCenter}>
           <TouchableHighlight onPress={this._onPressButton} underlayColor = "white">
               <Image
@@ -54,7 +56,7 @@ export default class Welcome extends Component {
         </View>
 
         <View style = {styles.panelBottom}>
-          <Text>Copyright (c) 2017 by Long - Hieu</Text>
+          <Text style={{color: '#fff'}}>Copyright (c) 2017 by Long - Hieu</Text>
         </View>
       </View>
 
@@ -65,7 +67,7 @@ export default class Welcome extends Component {
       this.setState({
         bestScore: (value == null ? 0 : value)
       });
-      console.log('welcome: ' + value);
+      // console.log('welcome: ' + value);
     }).done();
   }
 }
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#37384D',
   },
   panlelTop: {
     flex: 1,
@@ -89,13 +91,19 @@ const styles = StyleSheet.create({
   },
   yourscore: {
     flex: 1,
-    alignItems: 'flex-end',
+    alignItems: 'flex-end'
   },
   scoreText: {
-    fontSize: 25
+    fontSize: 25,
+    color: '#fff'
+  },
+  panelText: {
+    flex: 2,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
   panelCenter: {
-    flex: 8,
+    flex: 6,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -111,5 +119,10 @@ const styles = StyleSheet.create({
   touchableHighlightButton: {
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  gameName: {
+    color: '#fff',
+    fontSize: 40,
+    fontWeight: 'bold'
   }
 });

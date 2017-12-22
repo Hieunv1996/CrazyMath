@@ -72,9 +72,9 @@ export default class End extends Component {
     const { params } = this.props.navigation.state;
     if(params.BEST_SCORE < params.YOUR_SCORE){
         AsyncStorage.setItem("BEST_SCORE", params.YOUR_SCORE + '');
-        AsyncStorage.getItem("BEST_SCORE").then((value) => {
-            console.log('end: ' + value);
-          }).done();
+        // AsyncStorage.getItem("BEST_SCORE").then((value) => {
+        //     console.log('end: ' + value);
+        //   }).done();
     }
   }
 }
@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      backgroundColor: '#37384D',
     },
     notifiBox: {
         height: 300,
         alignSelf: 'stretch',
-        backgroundColor: '#ced6e2',
+        backgroundColor: '#7e8ba0',
         alignItems: 'center',
     },
     notiText: {
@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
     },
     textYourScore: {
         fontSize: 28,
-        color: '#4dcc26',
+        color: '#fff',
         fontWeight: 'bold',
     },
     textBestScore: {
         fontSize: 28,
-        color: '#267ecc',
+        color: '#fff',
         fontWeight: 'bold',
     },
     btnRestart: {

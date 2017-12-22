@@ -11,18 +11,22 @@ import {
   View,
   Image,
   AsyncStorage,
-  ALert,
+  TimerMixin,
   TouchableHighlight
 } from 'react-native';
 
-var isTrue, isPlus, num1, num2, result, calc;
+var isTrue, isPlus, num1, num2, result, calc, timer;
+var TIME = 5;
 
 export default class PlayScreen extends Component {
-  constructor(){
-    super()
+  constructor(props){
+    TIME = 5;
+    super(props)
     this.state = {
       score: 0,
-      bestScore: 0
+      bestScore: 0,
+      time: TIME,
+      isGameOver: false
     }
     this._getBestScore();
     this._renderQuestion();
@@ -43,23 +47,23 @@ export default class PlayScreen extends Component {
             </Text>
           </View>
         </View>
-
+        <View style = {styles.panelTime}>
+          <Text style = {styles.txtTime}>{this.state.time}</Text>
+        </View>
         <View style = {styles.panelCenter}>
         <Text style = {styles.calculate}>{calc}</Text>
         </View>
         <View style = {styles.panelBottom}>
             <View style = {styles.buttonFalse}>
-                <TouchableHighlight onPress={this._checkButtonFalse}>
+                <TouchableHighlight style = {styles.imageButtonFalse} onPress={this._checkButtonFalse}>
                     <Image
-                        style={styles.imageButtonFalse}
                         source={require('./../res/lose.png')}
                     />
                 </TouchableHighlight>
             </View>
             <View style = {styles.buttonTrue}>
-                <TouchableHighlight onPress={this._checkButtonTrue}>
+                <TouchableHighlight  style = {styles.imageButtonTrue} onPress={this._checkButtonTrue}>
                     <Image
-                        style={styles.imageButtonTrue}
                         source={require('./../res/tick.png')}
                     />
                 </TouchableHighlight>
@@ -76,28 +80,41 @@ export default class PlayScreen extends Component {
     }).done();
   }
 
+  _clearTimer(){
+    clearInterval(timer);
+    this.setState({time: TIME});
+  }
+
   _checkButtonTrue=() => {
-    // console.log('btnT: ' + isTrue + ' ' + calc);
+    this._clearTimer();
     if(isTrue){
       let newScore = this.state.score + 1;
+      if(TIME > 2 && newScore % 10 == 0) TIME--;
       console.log(this.state.score);
       this.setState({
         score: newScore
       });
       this._renderQuestion();
-    }else this._gameOver();
+    }else if(this.state.isGameOver == false){
+      this.setState({isGameOver: true});
+      this._gameOver();
+    }
   }
 
   _checkButtonFalse=() =>{
-    // console.log('btnF: ' + isTrue + ' ' + calc);
+    this._clearTimer();
     if(!isTrue){
       let newScore = this.state.score + 1;
+      if(TIME > 2 && newScore % 10 == 0) TIME--;
       console.log(this.state.score);
       this.setState({
         score: newScore
       });
       this._renderQuestion();
-    }else this._gameOver();
+    }else if(this.state.isGameOver == false){
+      this.setState({isGameOver: true});
+      this._gameOver();
+    }
   }
 
   _renderQuestion() {
@@ -113,9 +130,23 @@ export default class PlayScreen extends Component {
       else result += 1;
     }
     calc = num1 + (isPlus ? ' + ' : ' - ') + num2 + ' = ' + result;
+
+    time = TIME;
+    timer = setInterval(() => {
+      time--;
+      this.setState({time: time});
+      console.log('time: ' + time);
+      if(time == 0) {
+        if(this.state.isGameOver == false){
+          this.setState({isGameOver: true});
+          this._gameOver();
+        }
+      }
+    }, 1000);
   }
 
   _gameOver(){
+    this._clearTimer();
     this.props.navigation.navigate('End', {BEST_SCORE: this.state.bestScore, YOUR_SCORE: this.state.score})
   }
 
@@ -136,7 +167,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#F5FCFF',
+      backgroundColor: '#37384D',
     },
     panlelTop: {
       flex: 1,
@@ -153,10 +184,16 @@ const styles = StyleSheet.create({
       alignItems: 'flex-end',
     },
     scoreText: {
-      fontSize: 25
+      fontSize: 25,
+      color: '#fff'
+    },
+    panelTime:{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     panelCenter: {
-      flex: 7,
+      flex: 6,
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -169,21 +206,30 @@ const styles = StyleSheet.create({
         flex: 2,
         flexDirection: 'row',
         justifyContent: 'center',
-        marginBottom: 20,
+        marginBottom: 20
     },
     buttonTrue: {
-        flex: 1,
-        alignItems: 'center',
+      flex: 1,
+      alignItems: 'center',
     },
     buttonFalse: {
-        flex: 1,
-        alignItems: 'center',
+      flex: 1,
+      alignItems: 'center',
     },
     imageButtonTrue: {
-        backgroundColor: '#23ed04',
+      paddingLeft: 20,
+      paddingRight: 20,
+      backgroundColor: '#23ed04',
     },
     imageButtonFalse: {
-        backgroundColor: '#f40602',
+      paddingLeft: 20,
+      paddingRight: 20,
+      backgroundColor: '#f40602',
     },
+    txtTime: {
+      color: '#fff',
+      fontSize: 25, 
+      fontWeight:'bold'
+    }
   });
   
