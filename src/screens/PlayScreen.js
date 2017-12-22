@@ -10,6 +10,7 @@ import {
   Text,
   View,
   Image,
+  AsyncStorage,
   ALert,
   TouchableHighlight
 } from 'react-native';
@@ -21,7 +22,9 @@ export default class PlayScreen extends Component {
     super()
     this.state = {
       score: 0,
+      bestScore: 0
     }
+    this._getBestScore();
     this._renderQuestion();
   }
   render() {
@@ -31,7 +34,7 @@ export default class PlayScreen extends Component {
         <View style = {styles.panlelTop}>
           <View style = {styles.bestScore}>
             <Text style = {styles.scoreText}>
-              BEST: 20
+              BEST: {this.state.bestScore}
             </Text>
           </View>
           <View style = {styles.yourscore}>
@@ -65,9 +68,16 @@ export default class PlayScreen extends Component {
       </View>
     );
   }
+  _getBestScore(){
+    AsyncStorage.getItem("BEST_SCORE").then((value) => {
+      this.setState({
+        bestScore: (value == null ? 0 : value)
+      });
+    }).done();
+  }
 
   _checkButtonTrue=() => {
-    console.log('btnT: ' + isTrue + ' ' + calc);
+    // console.log('btnT: ' + isTrue + ' ' + calc);
     if(isTrue){
       let newScore = this.state.score + 1;
       console.log(this.state.score);
@@ -79,7 +89,7 @@ export default class PlayScreen extends Component {
   }
 
   _checkButtonFalse=() =>{
-    console.log('btnF: ' + isTrue + ' ' + calc);
+    // console.log('btnF: ' + isTrue + ' ' + calc);
     if(!isTrue){
       let newScore = this.state.score + 1;
       console.log(this.state.score);
@@ -106,7 +116,7 @@ export default class PlayScreen extends Component {
   }
 
   _gameOver(){
-    this.props.navigation.navigate('End')
+    this.props.navigation.navigate('End', {BEST_SCORE: this.state.bestScore, YOUR_SCORE: this.state.score})
   }
 
   _randomBetween(min, max){

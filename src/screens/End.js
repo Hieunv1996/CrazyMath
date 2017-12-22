@@ -6,23 +6,21 @@
 
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
+  AsyncStorage,
   Text,
   View,
   Image,
   TouchableHighlight
 } from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
-export default class End extends Component<{}> {
+export default class End extends Component {
+  constructor(){
+    super()
+  }
   render() {
+    const { params } = this.props.navigation.state;
     return (
       <View style={styles.container}>
         <View style = {styles.notifiBox}>
@@ -33,10 +31,10 @@ export default class End extends Component<{}> {
                     </Text>
                 </View>
                 <View>
-                    <Text style = {styles.textYourScore}>YOUR SCORE: 20</Text>
+                    <Text style = {styles.textYourScore}>YOUR SCORE: {params.YOUR_SCORE}</Text>
                 </View>
                 <View>
-                    <Text style = {styles.textBestScore}>BEST SCORE: 100</Text>
+                    <Text style = {styles.textBestScore}>BEST SCORE: {params.BEST_SCORE}</Text>
                 </View>
             </View>
             <View style = {styles.twoButton}>
@@ -62,10 +60,22 @@ export default class End extends Component<{}> {
     );
   }
   _onPressButtonRestart=() =>{
+    this._updateBestScore();
     this.props.navigation.navigate('PlayScreen')
   }
   _onPressButtonStop=() =>{
+    this._updateBestScore();
     this.props.navigation.navigate('Welcome')
+  }
+
+  _updateBestScore(){
+    const { params } = this.props.navigation.state;
+    if(params.BEST_SCORE < params.YOUR_SCORE){
+        AsyncStorage.setItem("BEST_SCORE", params.YOUR_SCORE + '');
+        AsyncStorage.getItem("BEST_SCORE").then((value) => {
+            console.log('end: ' + value);
+          }).done();
+    }
   }
 }
 

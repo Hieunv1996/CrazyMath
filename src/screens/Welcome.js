@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
+  AsyncStorage,
   Text,
   View,
   Image,
@@ -16,7 +17,13 @@ import {
 
 
 export default class Welcome extends Component {
-
+  constructor(){
+    super()
+    this.state = {
+      bestScore: 0,
+    }
+    this._getBestScore();
+  }
   _onPressButton=() => {
     this.props.navigation.navigate('PlayScreen')
   }
@@ -27,7 +34,7 @@ export default class Welcome extends Component {
         <View style = {styles.panlelTop}>
           <View style = {styles.bestScore}>
             <Text style = {styles.scoreText}>
-              BEST: 20
+              BEST: {this.state.bestScore}
             </Text>
           </View>
           <View style = {styles.yourscore}>
@@ -52,6 +59,14 @@ export default class Welcome extends Component {
       </View>
 
     );
+  }
+  _getBestScore(){
+    AsyncStorage.getItem("BEST_SCORE").then((value) => {
+      this.setState({
+        bestScore: (value == null ? 0 : value)
+      });
+      console.log('welcome: ' + value);
+    }).done();
   }
 }
 
