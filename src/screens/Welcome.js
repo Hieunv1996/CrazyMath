@@ -12,7 +12,7 @@ import {
   Text,
   View,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
 } from 'react-native';
 
 
@@ -47,7 +47,7 @@ export default class Welcome extends Component {
           <Text style = {styles.gameName}>CRAZY MATH</Text>
         </View>
         <View style = {styles.panelCenter}>
-          <TouchableHighlight onPress={this._onPressButton} underlayColor = "white">
+          <TouchableHighlight onPress={this._onPressButton} underlayColor = "#37384D">
               <Image
                 style={styles.buttonPlay}
                 source={require('./../res/play.png')}
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
   },
   touchableHighlightButton: {
     alignItems: 'center',
-    backgroundColor: 'white',
   },
   gameName: {
     color: '#fff',
