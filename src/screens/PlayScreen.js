@@ -71,6 +71,7 @@ export default class PlayScreen extends Component {
           <View style={styles.buttonFalse}>
             <TouchableHighlight style={styles.imageButtonFalse} onPress={this._checkButtonFalse}>
               <Image
+                style={styles.imageButton}
                 source={require('./../res/lose.png')}
               />
             </TouchableHighlight>
@@ -78,6 +79,7 @@ export default class PlayScreen extends Component {
           <View style={styles.buttonTrue}>
             <TouchableHighlight style={styles.imageButtonTrue} onPress={this._checkButtonTrue}>
               <Image
+                style={styles.imageButton}
                 source={require('./../res/tick.png')}
               />
             </TouchableHighlight>
@@ -160,8 +162,10 @@ export default class PlayScreen extends Component {
   }
 
   _gameOver() {
-    this._clearTimer();
-    this.props.navigation.navigate('End', { BEST_SCORE: this.state.bestScore, YOUR_SCORE: this.state.score })
+      this._clearTimer();
+      this.state.bestScore = this.state.score > this.state.bestScore ? this.state.score : this.state.bestScore;
+      AsyncStorage.setItem("BEST_SCORE", this.state.bestScore.toString());
+      this.props.navigation.navigate('End', { BEST_SCORE: this.state.bestScore, YOUR_SCORE: this.state.score })
   }
 
   _randomBetween(min, max) {
@@ -220,25 +224,30 @@ const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20
+    paddingBottom: 90,
   },
   buttonTrue: {
     flex: 1,
     alignItems: 'center',
+    marginRight: 10,
+    marginLeft: 7,
   },
   buttonFalse: {
     flex: 1,
     alignItems: 'center',
+    marginRight: 7,
+    marginLeft: 10,
   },
   imageButtonTrue: {
-    paddingLeft: 20,
-    paddingRight: 20,
     backgroundColor: '#23ed04',
+    padding: 30,
   },
   imageButtonFalse: {
-    paddingLeft: 20,
-    paddingRight: 20,
     backgroundColor: '#f40602',
+    padding: 30,
+  },
+  imageButton: {
+      //flex: 1,
   },
   txtTime: {
     color: '#fff',
