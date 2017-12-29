@@ -9,7 +9,7 @@ cd CrazyMathh
 npm install
 ```
 
-vs Androi
+vs Android
 
 ```
 react-native run-android 
